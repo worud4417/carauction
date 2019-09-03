@@ -1,5 +1,5 @@
 import React from 'react';
-import {View,Text,TextInput,StyleSheet,TouchableHighlight} from 'react-native';
+import {View,Text,TextInput,StyleSheet,TouchableHighlight,KeyboardAvoidingView} from 'react-native';
 
 class LoginScreen extends React.Component{
 
@@ -21,28 +21,27 @@ class LoginScreen extends React.Component{
 
     async _onPressButton(){
         member = await fetchUser(this.state.id, this.state.email)
-        // if (! member){
-        //     alert("fail");
-        //     return false
-        // }
-        // if (member.length!==1){
-        //     alert("fail");
-        //     return false
-        // }
-        this.setState({id:"lee",email:"worud4417@hanmail.net"})
+        if (! member){
+            alert("fail");
+            return false
+        }
+        if (member.length!==1){
+            alert("fail");
+            return false
+        }
         return this.props.navigation.navigate('MyCarList',{email:this.state.email})
     }
 
     render(){
         return(
-            <View style={styles.view}>
+            <KeyboardAvoidingView style={styles.view}>
                 <Text style={styles.text}>CAR AUCTION</Text>
                 <TextInput style={styles.textinput} onChangeText={text=>this._onChangeIdText(text)} placeholder="이름"></TextInput>
                 <TextInput style={styles.textinput} onChangeText={text=>this._onChangeEmailText(text)} placeholder="이메일"></TextInput>
                 <TouchableHighlight style={styles.button1} onPress={()=>this._onPressButton()}>
                     <Text style={{alignSelf:"center",color:"white",fontSize:20}}>회원가입/로그인</Text>
                 </TouchableHighlight>
-            </View>
+            </KeyboardAvoidingView>
         )
     }
 }
@@ -54,7 +53,6 @@ async function fetchUser(id,email) {
     return await fetch(url,{
         method:"GET",
     }).then((resp)=>{
-        // console.log(resp.json())
         return resp.json()
     })
 }
