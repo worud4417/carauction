@@ -2,7 +2,7 @@ import React from 'react';
 import {View,Text,FlatList,TouchableOpacity} from 'react-native';
 
 import CarComponent from '../components/CarComponent';
-import fetchCarList from '../apis/getCarList'
+import fetchCarList from '../apis/GetCarList'
 
 class MyCarListScreen extends React.Component{
 
@@ -14,12 +14,19 @@ class MyCarListScreen extends React.Component{
         }
     }
 
-    static navigationOptions = {
-        title:"CAR LIST",
-        headerStyle:{
-            backgroundColor:"orange"
-        },
-        headerTintColor:"white",
+    static navigationOptions =({navigation})=>{
+        return{
+            title:"CAR LIST",
+            headerStyle:{
+                backgroundColor:"orange"
+            },
+            headerTintColor:"white",
+            headerRight:(
+                <TouchableOpacity onPress={()=>console.log(navigation.navigate("MyCarAdd"))}>
+                    <Text style={{fontSize:20,color:"white"}}> + </Text>
+                </TouchableOpacity>
+            )
+        }
     }
 
     async componentDidMount(){
@@ -29,14 +36,14 @@ class MyCarListScreen extends React.Component{
 
     _renderItem = ({item})=>(
         <TouchableOpacity>
-            <CarComponent car={item}></CarComponent>
+            <CarComponent car={item} navigation={this.props.navigation}></CarComponent>
         </TouchableOpacity>
     )
+
 
     render(){
         return(
             <View>
-                <Text>MyCarListScreen</Text>
                 <FlatList data={this.state.myCarList} keyExtractor={(item,index)=>item.vin}
                 renderItem={(item)=>this._renderItem(item)}></FlatList>
             </View>

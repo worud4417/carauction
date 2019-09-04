@@ -1,6 +1,7 @@
 import React from 'react';
-import {View,Text,TextInput,StyleSheet,TouchableHighlight,KeyboardAvoidingView} from 'react-native';
+import {View,Text,TextInput,StyleSheet,TouchableHighlight} from 'react-native';
 
+import fetchUser from '../apis/GetUser';
 class LoginScreen extends React.Component{
 
     constructor(props){
@@ -19,7 +20,7 @@ class LoginScreen extends React.Component{
         this.setState({email:text})
     }
 
-    async _onPressButton(){
+    async _onPressSubmitButton(){
         member = await fetchUser(this.state.id, this.state.email)
         if (! member){
             alert("fail");
@@ -32,29 +33,33 @@ class LoginScreen extends React.Component{
         return this.props.navigation.navigate('MyCarList',{email:this.state.email})
     }
 
+    _onPressJoinButton(){
+        return this.props.navigation.navigate("Join")
+    }
+
+//this is test user part----------------------------------------------------------------------------------------------
+    _onSubmitTestUser(){
+        return this.props.navigation.navigate('MyCarList',{email:"ys@betweak.com"})
+    }
+//--------------------------------------------------------------------------------------------------------------------
+
     render(){
         return(
-            <KeyboardAvoidingView style={styles.view}>
+            <View style={styles.view}>
                 <Text style={styles.text}>CAR AUCTION</Text>
-                <TextInput style={styles.textinput} onChangeText={text=>this._onChangeIdText(text)} placeholder="이름"></TextInput>
-                <TextInput style={styles.textinput} onChangeText={text=>this._onChangeEmailText(text)} placeholder="이메일"></TextInput>
-                <TouchableHighlight style={styles.button1} onPress={()=>this._onPressButton()}>
-                    <Text style={{alignSelf:"center",color:"white",fontSize:20}}>회원가입/로그인</Text>
+                <TextInput style={styles.textinput} onChangeText={text=>this._onChangeIdText(text)} placeholder="  이름"></TextInput>
+                <TextInput style={styles.textinput} onChangeText={text=>this._onChangeEmailText(text)} placeholder="  이메일"></TextInput>
+                {/*------------------change me----*/}
+                <TouchableHighlight style={styles.button1} onPress={()=>this._onSubmitTestUser()}>
+                    <Text style={{alignSelf:"center",color:"white",fontSize:20}}>로그인</Text>
                 </TouchableHighlight>
-            </KeyboardAvoidingView>
+                {/*------------------change me----*/}
+                <TouchableHighlight style={styles.button1} onPress={()=>this._onPressJoinButton()}>
+                    <Text style={{alignSelf:"center",color:"white",fontSize:20}}>회원가입</Text>
+                </TouchableHighlight>
+            </View>
         )
     }
-}
-
-async function fetchUser(id,email) {
-    url = 'http://52.78.89.146:3000/api/Member';
-    filter = `{"where":{"and":[{"email":"${email}"},{"lastName":"${id}"}]}}`;
-    url = `${url}?filter=${filter}`
-    return await fetch(url,{
-        method:"GET",
-    }).then((resp)=>{
-        return resp.json()
-    })
 }
 
 const styles = StyleSheet.create({
